@@ -43,6 +43,12 @@ const Home = () => {
           sx={{
             flexGrow: 1,
             m: 3,
+            backgroundImage: 'url("/bg.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            overflow: 'hidden',
+            minHeight: '100vh',
           }}
         >
           {allRecipes.length > 0 ? (
@@ -94,8 +100,8 @@ const Home = () => {
             </Grid>
           ) : (
             <Container maxWidth="sm">
-              <Typography variant="h4" align="center" color="textSecondary">
-                Nothing to show, please search something!
+              <Typography variant="h4" align="center" color="White">
+                Search for your dishes!
               </Typography>
               <SearchListAlert />
             </Container>
