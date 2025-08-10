@@ -13,25 +13,6 @@ You're one-stop for recipes, It is the best app for any type of cooking and cook
 - It is a fully responsive web application, so you can easily view it on your mobile device as well.
 
 
-## View the app (Hosted on Vercel):
-https://recipe-finder-rho-gilt.vercel.app/
 
-## Tools
-- React
-- Redux
-- React-Router
-- Material -UI
-  
-## How to use this repo?
-Download or clone this repo and run the following command in the terminal:
 
-```bash
-npm install
-or
-npm i
-```
 
-## Conclusion:
-A recipe web application based not only on a list of recipes with ingredients but a database created by food lovers, for food lovers. Search through thousands of the best recipes worldwide and find what you're looking for without leaving your daily routine Give it a go!
-
-## Thanks for visiting this repo!
