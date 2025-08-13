@@ -85,10 +85,10 @@ jobs:
 
       - name: Deploy Backend to Kubernetes
         run: |
-          kubectl apply -f k8s/backend-deployment.yaml
-          kubectl apply -f k8s/backend-service.yaml
+          kubectl --kubeconfig=kubeconfig apply -f k8s/backend-deployment.yaml
+          kubectl --kubeconfig=kubeconfig apply -f k8s/backend-service.yaml
 
       - name: Deploy Frontend to Kubernetes
         run: |
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
+          kubectl --kubeconfig=kubeconfig apply -f k8s/frontend-deployment.yaml
+          kubectl --kubeconfig=kubeconfig apply -f k8s/frontend-service.yaml
