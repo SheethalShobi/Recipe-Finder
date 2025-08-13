@@ -11,6 +11,12 @@ on:
 jobs:
   build-and-deploy:
     runs-on: self-hosted
+    
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    
     env:
       FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
       BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
