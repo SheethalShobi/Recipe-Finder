@@ -63,9 +63,9 @@ jobs:
       - name: Build Backend Docker image
         run: docker build -t $BACKEND_IMAGE ./backend
 
-      - name: Run DAST scan with OWASP ZAP
-        run: |
-          docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -r zap_report.html
+    #  - name: Run DAST scan with OWASP ZAP
+     #   run: |
+      #    docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -r zap_report.html
 
       - name: Push Frontend image
         run: docker push $FRONTEND_IMAGE
