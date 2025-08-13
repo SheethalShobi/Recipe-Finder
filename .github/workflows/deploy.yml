@@ -1,19 +1,20 @@
-name:  CI/CD Pipeline 
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
   pull_request:
-  
+    branches:
+      - main
+      
 jobs:
   build-and-deploy:
     runs-on: self-hosted
-
     env:
       FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
       BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
-
+      
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -27,36 +28,36 @@ jobs:
         run: |
           npm install
           npm run lint
-          
-
+                
       - name: Run Unit Tests
         run: |
           npm install
           npm test || true
           
-
-     - name: SAST with CodeQL
+      - name: SAST with CodeQL
         uses: github/codeql-action/init@v2
         with:
-         languages: javascript
-       - name: Perform CodeQL Analysis
+          languages: javascript
+          
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
-         upload-sarif: false
-
-    - name: SCA (Dependency Scan)
-      run: |
-       npm install -g npm-audit-ci
-       npm-audit-ci --moderate || true
-
+          upload-sarif: false
+          
+      - name: SCA (Dependency Scan)
+        run: |
+          npm install -g npm-audit-ci
+          npm-audit-ci --moderate || true
+          
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Verify Docker login
-        run: docker info    
 
+      - name: Verify Docker login
+        run: docker info
+        
       - name: Build Frontend Docker image
         run: docker build -t $FRONTEND_IMAGE .
 
@@ -64,12 +65,12 @@ jobs:
         run: docker build -t $BACKEND_IMAGE ./backend
 
       - name: Run DAST scan with OWASP ZAP
-       run: |
-        docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -r zap_report.html
+        run: |
+          docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -r zap_report.html
 
       - name: Push Frontend image
         run: docker push $FRONTEND_IMAGE
-
+        
       - name: Push Backend image
         run: docker push $BACKEND_IMAGE
 
@@ -82,7 +83,7 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
           export KUBECONFIG=$PWD/kubeconfig
-
+          
       - name: Deploy Backend to Kubernetes
         run: |
           kubectl --kubeconfig=kubeconfig apply -f k8s/backend-deployment.yaml
