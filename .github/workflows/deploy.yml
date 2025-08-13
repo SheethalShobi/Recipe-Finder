@@ -1,4 +1,4 @@
-name: Full CI/CD Pipeline with DAST
+name: Full CI/CD Pipeline 
 
 on:
   push:
