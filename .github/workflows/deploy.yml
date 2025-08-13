@@ -5,10 +5,10 @@ on:
     branches:
       - main
   pull_request:
-
- jobs:
-   build-test-deploy:
-     runs-on: self-hosted
+  
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
 
     env:
       FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
