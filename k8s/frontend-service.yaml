@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: frontend-service
 spec:
+  type: NodePort       # Change from LoadBalancer to NodePort for EC2
   selector:
     app: frontend
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+    - port: 80           # Cluster port
+      targetPort: 3000   # React container port
+      nodePort: 31861    # External port on EC2
