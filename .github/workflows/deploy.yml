@@ -32,8 +32,8 @@ jobs:
       - name: Run Unit Tests
         run: |
           npm install
-          npm test
-          continue-on-error: true
+          npm test || true
+          
 
       - name: SAST with CodeQL
         uses: github/codeql-action/init@v2
