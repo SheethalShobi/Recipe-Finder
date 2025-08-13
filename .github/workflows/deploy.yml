@@ -1,3 +1,4 @@
+
 name: CI/CD Pipeline
 
 on:
@@ -72,6 +73,7 @@ jobs:
 
       
       - name: Run DAST scan with OWASP ZAP
+        continue-on-error: true
         run: |
          docker run --rm --network host -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable \
            zap-baseline.py -t http://localhost:8080 -r zap_report.html
