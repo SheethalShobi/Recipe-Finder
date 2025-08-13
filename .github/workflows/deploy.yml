@@ -41,6 +41,8 @@ jobs:
           languages: javascript
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
+        with:
+         upload-sarif: false
 
       - name: SCA (Dependency Scan)
         run: |
