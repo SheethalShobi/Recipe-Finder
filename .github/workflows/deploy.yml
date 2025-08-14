@@ -92,18 +92,20 @@ jobs:
       - name: Push Backend image
         run: docker push $BACKEND_IMAGE
         
-      - name: Install Trivy
-        run: |
-         sudo apt-get update && sudo apt-get install -y wget
-         wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.41.1_Linux-64bit.deb
-         sudo dpkg -i trivy_0.41.1_Linux-64bit.deb
+      - name: Trivy Scan Frontend Docker Image
+        uses: aquasecurity/trivy-action@v1
+        with:
+          image-ref: ${{ env.FRONTEND_IMAGE }}
+          severity: HIGH,CRITICAL
+          exit-code: 1
 
-      - name: Scan Frontend Docker image with Trivy
-        run: trivy image --severity HIGH,CRITICAL --exit-code 1 $FRONTEND_IMAGE || true
+      - name: Trivy Scan Backend Docker Image
+        uses: aquasecurity/trivy-action@v1
+        with:
+          image-ref: ${{ env.BACKEND_IMAGE }}
+          severity: HIGH,CRITICAL
+          exit-code: 1
 
-      - name: Scan Backend Docker image with Trivy
-        run: trivy image --severity HIGH,CRITICAL --exit-code 1 $BACKEND_IMAGE || true
-        
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
