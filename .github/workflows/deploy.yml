@@ -106,11 +106,6 @@ jobs:
           severity: HIGH,CRITICAL
           exit-code: 1
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.30.0'
-
       - name: Configure kubeconfig
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
