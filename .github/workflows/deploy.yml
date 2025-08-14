@@ -83,7 +83,24 @@ jobs:
         run: docker build -t $FRONTEND_IMAGE .
 
       - name: Build Backend Docker image
-        run: docker build -t $BACKEND_IMAGE ./backend
+        run: docker build -t $BACKEND_IMAGE ./backend'
+        
+      - name: Trivy Scan Frontend Docker Image
+        uses: aquasecurity/trivy-action@v0.29.0
+        with:
+         image-ref: ${{ env.FRONTEND_IMAGE }}
+         format: table
+         output: trivy-frontend-results.json
+         exit-code: 1
+
+      - name: Trivy Scan Backend Docker Image
+        uses: aquasecurity/trivy-action@v0.29.0
+        with:
+         image-ref: ${{ env.BACKEND_IMAGE }}
+         format: table
+         output: trivy-backend-results.json
+         exit-code: 1
+
 
       
       - name: Push Frontend image
@@ -92,20 +109,6 @@ jobs:
       - name: Push Backend image
         run: docker push $BACKEND_IMAGE
         
-      - name: Trivy Scan Frontend Docker Image
-        uses: aquasecurity/trivy-action@0.28.0  # Fixed version
-        with:
-         image-ref: ${{ env.FRONTEND_IMAGE }}
-         severity: HIGH,CRITICAL
-         exit-code: 1
-         
-      - name: Trivy Scan Backend Docker Image
-        uses: aquasecurity/trivy-action@0.28.0  # Fixed version
-        with:
-         image-ref: ${{ env.BACKEND_IMAGE }}
-         severity: HIGH,CRITICAL
-         exit-code: 1
-         
       - name: Configure kubeconfig
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig
