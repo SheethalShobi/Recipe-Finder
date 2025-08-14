@@ -93,14 +93,14 @@ jobs:
         run: docker push $BACKEND_IMAGE
         
       - name: Trivy Scan Frontend Docker Image
-        uses: aquasecurity/trivy-action@v0.29.0
+        uses: aquasecurity/trivy-action@0.28.0  # Fixed version
         with:
          image-ref: ${{ env.FRONTEND_IMAGE }}
          severity: HIGH,CRITICAL
          exit-code: 1
-
+         
       - name: Trivy Scan Backend Docker Image
-        uses: aquasecurity/trivy-action@v0.29.0
+        uses: aquasecurity/trivy-action@0.28.0  # Fixed version
         with:
          image-ref: ${{ env.BACKEND_IMAGE }}
          severity: HIGH,CRITICAL
