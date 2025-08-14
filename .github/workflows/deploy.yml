@@ -78,9 +78,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Verify Docker login
-        run: docker info
-        
+     
       - name: Build Frontend Docker image
         run: docker build -t $FRONTEND_IMAGE .
 
@@ -88,18 +86,24 @@ jobs:
         run: docker build -t $BACKEND_IMAGE ./backend
 
       
-      - name: Run DAST scan with OWASP ZAP
-        continue-on-error: true
-        run: |
-         echo "docker run --rm --network host -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable \"
-         echo  "zap-baseline.py -t http://localhost:8080 -r zap_report.html"
-
       - name: Push Frontend image
         run: docker push $FRONTEND_IMAGE
         
       - name: Push Backend image
         run: docker push $BACKEND_IMAGE
+        
+      - name: Install Trivy
+        run: |
+         sudo apt-get update && sudo apt-get install -y wget
+         wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.41.1_Linux-64bit.deb
+         sudo dpkg -i trivy_0.41.1_Linux-64bit.deb
 
+      - name: Scan Frontend Docker image with Trivy
+        run: trivy image --severity HIGH,CRITICAL --exit-code 1 $FRONTEND_IMAGE || true
+
+      - name: Scan Backend Docker image with Trivy
+        run: trivy image --severity HIGH,CRITICAL --exit-code 1 $BACKEND_IMAGE || true
+        
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
@@ -119,3 +123,10 @@ jobs:
         run: |
           kubectl --kubeconfig=kubeconfig apply -f k8s/frontend-deployment.yaml
           kubectl --kubeconfig=kubeconfig apply -f k8s/frontend-service.yaml
+
+      - name: Run DAST scan with OWASP ZAP
+        continue-on-error: true
+        run: |
+         echo "docker run --rm --network host -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable \"
+         echo  "zap-baseline.py -t http://localhost:8080 -r zap_report.html"
+
